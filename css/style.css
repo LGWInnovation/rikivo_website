@@ -1,0 +1,99 @@
+*{box-sizing:border-box}
+:root{
+  --bg:#eef3f1; --panel:#ffffff; --line:#c7d8d4; --text:#16202a; --muted:#5e6d7d;
+  --brand:#11786f; --brand-dark:#0d5954; --brand-soft:#dff1eb; --hero-tint:#dceee8;
+  --light-teal:#edf6f3; --selected:#ffd966; --correct:#dcfce7; --wrong:#fee2e2;
+  --shade1:#ffffff; --shade2:#cfd5dd; --shade3:#9ea7b2; --grid-line:#b7c2ce;
+  --shadow:0 10px 28px rgba(15,23,42,.06); --radius-xl:26px; --radius-lg:20px;
+}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif}
+body{min-height:100vh}
+.app-shell{width:min(100%,760px);margin:0 auto;padding:14px 12px 28px}
+.topbar{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px}
+.brand-lockup{text-align:center}
+.brand-title,.daily-hero h1,.section-card h2,.compact-card h2{
+  font-family:Georgia,"Palatino Linotype","Book Antiqua",serif;letter-spacing:-0.02em
+}
+.brand-title{font-size:clamp(2rem,6vw,2.8rem);font-weight:700;line-height:1;color:#0f2239}
+.tm{font-size:.38em;vertical-align:super}
+.tagline,.section-copy,.small-note,.bottom-note,.habit-line{color:var(--muted)}
+.daily-hero{text-align:center;margin-bottom:10px}
+.daily-hero h1{margin:0 0 6px;font-size:clamp(1.9rem,5vw,2.6rem);font-weight:700;color:#0f2239}
+.daily-hero p{margin:0 auto;max-width:560px;font-size:1rem}
+.play-card,.section-card,.compact-card,.help-panel{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-xl);box-shadow:var(--shadow)
+}
+.hero-tint,.support-tint{background:var(--hero-tint)}
+.light-teal-tint{background:var(--light-teal)}
+.plain-card{background:var(--panel)}
+.play-card{padding:12px 12px 14px;margin-bottom:14px}
+.board-wrap{display:flex;justify-content:center}
+.puzzle-grid{display:grid;gap:8px}
+.cell{
+  width:clamp(66px,18vw,84px);height:clamp(66px,18vw,84px);
+  border:2px solid var(--grid-line);border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-size:clamp(1.4rem,5vw,2rem);font-weight:400;color:var(--text);cursor:pointer;
+  box-shadow:inset 0 -1px 0 rgba(255,255,255,.4)
+}
+.cell.given-cell{box-shadow:inset 0 0 0 3px rgba(17,120,111,.25)}
+.cell.selected{outline:4px solid var(--selected);outline-offset:1px}
+.cell.correct{background:var(--correct)!important}
+.cell.wrong{background:var(--wrong)!important}
+.shade-1{background:var(--shade1)} .shade-2{background:var(--shade2)} .shade-3{background:var(--shade3)} .final-cell{background:#fff}
+.entry-panel{margin-top:10px;background:#ffffff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:10px}
+.feedback-chip{margin:0 auto 7px;display:inline-block;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted);font-size:.88rem}
+.feedback-chip.hidden{display:none}
+.digit-pad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;max-width:216px;margin:0 auto}
+.digit-btn{min-height:44px;border-radius:13px;border:1px solid var(--line);background:#fff;font-size:.98rem;font-weight:700;cursor:pointer}
+.digit-btn.empty{visibility:hidden;pointer-events:none}
+.small-controls{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:9px}
+.compact-controls{max-width:370px;margin-left:auto;margin-right:auto}
+.primary-pill,.secondary-pill,.ghost-pill{
+  display:inline-block;border-radius:999px;padding:10px 13px;text-decoration:none;text-align:center;font-weight:700;
+  font-size:.93rem;cursor:pointer;border:0;font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;min-width:92px
+}
+.primary-pill{background:var(--brand);color:#fff}
+.secondary-pill{background:#ffffff;color:var(--brand-dark);border:1px solid #b2dfd4}
+.ghost-pill{background:#fff;color:var(--text);border:1px solid var(--line)}
+.habit-line{text-align:center;font-size:.95rem;margin:10px 0 0}
+.section-card,.compact-card{padding:18px 16px;margin-bottom:14px}
+.section-card h2,.compact-card h2{margin:0 0 12px;font-size:clamp(1.35rem,4vw,1.9rem);text-align:center;font-weight:700;color:#0f2239}
+.legend-grid{display:grid;gap:12px}
+.legend-card{display:grid;grid-template-columns:42px 1fr;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:16px;background:#ffffff}
+.key-box{width:38px;height:38px;border-radius:10px;border:2px solid var(--grid-line)}
+.compact-clue .small-note{margin-top:8px}
+.action-stack{display:grid;gap:12px;max-width:440px;margin:0 auto}
+.compact-actions{max-width:420px}
+.center-copy,.center{text-align:center}
+.bottom-note{text-align:center;padding:16px 0 8px;font-size:.95rem}
+.footer-line{display:block;width:120px;height:1px;background:var(--line);margin:0 auto 10px}
+@media (min-width:760px){.legend-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:520px){
+  .app-shell{padding-left:10px;padding-right:10px}
+  .play-card,.section-card,.compact-card,.help-panel{border-radius:20px;padding-left:12px;padding-right:12px}
+}
+
+
+.challenge-line{
+  margin:0 0 8px;
+  text-align:center;
+  color:var(--brand-dark);
+  font-weight:700;
+  font-size:1rem;
+}
+.compact-actions .primary-pill{
+  background:var(--brand);
+  color:#fff;
+}
+.compact-actions .secondary-pill{
+  background:#fff;
+  color:var(--brand-dark);
+}
+@media (max-width:520px){
+  .challenge-line{font-size:.98rem;}
+}
+
+
+.daily-title{
+  font-size:clamp(1.65rem,4.4vw,2.15rem)!important;
+}
