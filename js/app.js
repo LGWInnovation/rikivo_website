@@ -12,13 +12,90 @@
   const patreonLinkInline = document.getElementById("patreon-link-inline");
   const bookLinkInline = document.getElementById("book-link-inline");
   const feedbackChip = document.getElementById("feedback-chip");
+  const STATS_KEY = "rikivo_streak_stats_v1";
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const startedAt = Date.now();
 
   if (patreonLinkInline) patreonLinkInline.href = config.patreonUrl || "#";
   if (bookLinkInline) bookLinkInline.href = config.bookUrl || "#";
 
   const current = puzzle.givens.map(r => r.slice());
   let selected = null, cells = [], inputBuffer = "";
+  const stats = loadStats();
+  const statsEl = createStatsDisplay();
   gridEl.style.gridTemplateColumns = `repeat(${puzzle.size}, 1fr)`;
+
+  function loadStats() {
+    try {
+      const raw = localStorage.getItem(STATS_KEY);
+      if (!raw) return { currentStreak: 0, bestStreak: 0, lastCompletedDate: null, bestTimesByDate: {} };
+      const parsed = JSON.parse(raw);
+      return {
+        currentStreak: Number.isInteger(parsed.currentStreak) ? parsed.currentStreak : 0,
+        bestStreak: Number.isInteger(parsed.bestStreak) ? parsed.bestStreak : 0,
+        lastCompletedDate: typeof parsed.lastCompletedDate === "string" ? parsed.lastCompletedDate : null,
+        bestTimesByDate: parsed.bestTimesByDate && typeof parsed.bestTimesByDate === "object" ? parsed.bestTimesByDate : {}
+      };
+    } catch (_) {
+      return { currentStreak: 0, bestStreak: 0, lastCompletedDate: null, bestTimesByDate: {} };
+    }
+  }
+
+  function saveStats() {
+    localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+  }
+
+  function createStatsDisplay() {
+    const entryPanel = document.querySelector(".entry-panel");
+    if (!entryPanel) return null;
+    const el = document.createElement("p");
+    el.className = "habit-line";
+    el.id = "streak-stats";
+    entryPanel.appendChild(el);
+    renderStats();
+    return el;
+  }
+
+  function renderStats() {
+    if (!statsEl) return;
+    const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
+    const bestTimeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : "—";
+    statsEl.textContent = `Streak: ${stats.currentStreak} day${stats.currentStreak === 1 ? "" : "s"} · Best: ${stats.bestStreak} · Time: ${bestTimeText}`;
+  }
+
+  function formatDuration(totalSeconds) {
+    const s = Math.max(0, Math.floor(totalSeconds));
+    const min = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${min}:${String(sec).padStart(2, "0")}`;
+  }
+
+  function updateBestTimeOnCompletion() {
+    const elapsedSeconds = Math.floor((Date.now() - startedAt) / 1000);
+    const existing = Number(stats.bestTimesByDate[todayKey]);
+    if (!Number.isFinite(existing) || elapsedSeconds < existing) {
+      stats.bestTimesByDate[todayKey] = elapsedSeconds;
+      return true;
+    }
+    return false;
+  }
+
+  function updateStreakOnCompletion() {
+    if (stats.lastCompletedDate === todayKey) return;
+    if (!stats.lastCompletedDate) {
+      stats.currentStreak = 1;
+    } else {
+      const prev = new Date(stats.lastCompletedDate + "T00:00:00Z");
+      const today = new Date(todayKey + "T00:00:00Z");
+      const dayDiff = Math.floor((today - prev) / 86400000);
+      if (dayDiff === 1) stats.currentStreak += 1;
+      else if (dayDiff > 1) stats.currentStreak = 1;
+    }
+    stats.lastCompletedDate = todayKey;
+    if (stats.currentStreak > stats.bestStreak) stats.bestStreak = stats.currentStreak;
+    saveStats();
+    renderStats();
+  }
 
   function showFeedback(msg){
     if(!feedbackChip) return;
@@ -118,7 +195,13 @@
       }
     }
     restoreSelected();
-    if(wrongCount===0 && emptyCount===0) showFeedback("Correct.");
+    if(wrongCount===0 && emptyCount===0) {
+      updateStreakOnCompletion();
+      updateBestTimeOnCompletion();
+      saveStats();
+      renderStats();
+      showFeedback("Correct.");
+    }
     else if(wrongCount===0) showFeedback("Some squares are still empty.");
     else showFeedback("Some entries are wrong.");
   }
