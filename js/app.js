@@ -14,6 +14,7 @@
   const feedbackChip = document.getElementById("feedback-chip");
   const STATS_KEY = "rikivo_streak_stats_v1";
   const todayKey = new Date().toISOString().slice(0, 10);
+  const startedAt = Date.now();
 
   if (patreonLinkInline) patreonLinkInline.href = config.patreonUrl || "#";
   if (bookLinkInline) bookLinkInline.href = config.bookUrl || "#";
@@ -27,15 +28,16 @@
   function loadStats() {
     try {
       const raw = localStorage.getItem(STATS_KEY);
-      if (!raw) return { currentStreak: 0, bestStreak: 0, lastCompletedDate: null };
+      if (!raw) return { currentStreak: 0, bestStreak: 0, lastCompletedDate: null, bestTimesByDate: {} };
       const parsed = JSON.parse(raw);
       return {
         currentStreak: Number.isInteger(parsed.currentStreak) ? parsed.currentStreak : 0,
         bestStreak: Number.isInteger(parsed.bestStreak) ? parsed.bestStreak : 0,
-        lastCompletedDate: typeof parsed.lastCompletedDate === "string" ? parsed.lastCompletedDate : null
+        lastCompletedDate: typeof parsed.lastCompletedDate === "string" ? parsed.lastCompletedDate : null,
+        bestTimesByDate: parsed.bestTimesByDate && typeof parsed.bestTimesByDate === "object" ? parsed.bestTimesByDate : {}
       };
     } catch (_) {
-      return { currentStreak: 0, bestStreak: 0, lastCompletedDate: null };
+      return { currentStreak: 0, bestStreak: 0, lastCompletedDate: null, bestTimesByDate: {} };
     }
   }
 
@@ -56,7 +58,26 @@
 
   function renderStats() {
     if (!statsEl) return;
-    statsEl.textContent = `Streak: ${stats.currentStreak} day${stats.currentStreak === 1 ? "" : "s"} · Best: ${stats.bestStreak}`;
+    const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
+    const bestTimeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : "—";
+    statsEl.textContent = `Streak: ${stats.currentStreak} day${stats.currentStreak === 1 ? "" : "s"} · Best: ${stats.bestStreak} · Time: ${bestTimeText}`;
+  }
+
+  function formatDuration(totalSeconds) {
+    const s = Math.max(0, Math.floor(totalSeconds));
+    const min = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${min}:${String(sec).padStart(2, "0")}`;
+  }
+
+  function updateBestTimeOnCompletion() {
+    const elapsedSeconds = Math.floor((Date.now() - startedAt) / 1000);
+    const existing = Number(stats.bestTimesByDate[todayKey]);
+    if (!Number.isFinite(existing) || elapsedSeconds < existing) {
+      stats.bestTimesByDate[todayKey] = elapsedSeconds;
+      return true;
+    }
+    return false;
   }
 
   function updateStreakOnCompletion() {
@@ -176,6 +197,9 @@
     restoreSelected();
     if(wrongCount===0 && emptyCount===0) {
       updateStreakOnCompletion();
+      updateBestTimeOnCompletion();
+      saveStats();
+      renderStats();
       showFeedback("Correct.");
     }
     else if(wrongCount===0) showFeedback("Some squares are still empty.");
