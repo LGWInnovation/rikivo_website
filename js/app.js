@@ -22,6 +22,7 @@
   const current = puzzle.givens.map(r => r.slice());
   let selected = null, cells = [], inputBuffer = "";
   let solved = false;
+  let autoCheckTimer = null;
   const stats = loadStats();
   const statsEl = createStatsDisplay();
   gridEl.style.gridTemplateColumns = `repeat(${puzzle.size}, 1fr)`;
@@ -116,7 +117,7 @@
     cell.style.fontWeight = value === puzzle.maxNumber ? "800" : "400";
     cells.forEach(c => c.classList.remove("correct","wrong"));
     restoreSelected(); showFeedback("");
-    triggerAutoCheckIfFilled();
+    scheduleAutoCheckIfFilled();
   }
   function hasAnyEmptyCells() {
     for (let row = 0; row < puzzle.size; row++) {
@@ -130,6 +131,13 @@
   function triggerAutoCheckIfFilled() {
     if (solved) return;
     if (!hasAnyEmptyCells()) checkPuzzle();
+  }
+  function scheduleAutoCheckIfFilled() {
+    if (autoCheckTimer) clearTimeout(autoCheckTimer);
+    autoCheckTimer = setTimeout(() => {
+      autoCheckTimer = null;
+      triggerAutoCheckIfFilled();
+    }, 700);
   }
   function createGrid(){
     gridEl.innerHTML = ""; cells = [];
@@ -175,6 +183,7 @@
   }
   function backspace(){
     if(!selected) return;
+    if (autoCheckTimer) { clearTimeout(autoCheckTimer); autoCheckTimer = null; }
     inputBuffer = inputBuffer.slice(0,-1);
     if(!inputBuffer){
       current[selected.row][selected.col] = null;
@@ -186,12 +195,14 @@
   }
   function clearSelectedCell(){
     if(!selected) return;
+    if (autoCheckTimer) { clearTimeout(autoCheckTimer); autoCheckTimer = null; }
     current[selected.row][selected.col] = null;
     const cell = cellAt(selected.row, selected.col);
     cell.textContent = ""; cell.style.fontWeight = "400"; inputBuffer = "";
     cells.forEach(c => c.classList.remove("correct","wrong")); restoreSelected(); showFeedback("");
   }
   function resetPuzzle(){
+    if (autoCheckTimer) { clearTimeout(autoCheckTimer); autoCheckTimer = null; }
     for(let row=0; row<puzzle.size; row++) for(let col=0; col<puzzle.size; col++) current[row][col] = puzzle.givens[row][col];
     solved = false;
     selected = null; inputBuffer = ""; createGrid(); showFeedback("Puzzle reset.");
