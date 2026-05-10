@@ -21,6 +21,7 @@
 
   const current = puzzle.givens.map(r => r.slice());
   let selected = null, cells = [], inputBuffer = "";
+  let solved = false;
   const stats = loadStats();
   const statsEl = createStatsDisplay();
   gridEl.style.gridTemplateColumns = `repeat(${puzzle.size}, 1fr)`;
@@ -115,6 +116,20 @@
     cell.style.fontWeight = value === puzzle.maxNumber ? "800" : "400";
     cells.forEach(c => c.classList.remove("correct","wrong"));
     restoreSelected(); showFeedback("");
+    triggerAutoCheckIfFilled();
+  }
+  function hasAnyEmptyCells() {
+    for (let row = 0; row < puzzle.size; row++) {
+      for (let col = 0; col < puzzle.size; col++) {
+        if (puzzle.givens[row][col] !== null) continue;
+        if (current[row][col] === null || current[row][col] === "") return true;
+      }
+    }
+    return false;
+  }
+  function triggerAutoCheckIfFilled() {
+    if (solved) return;
+    if (!hasAnyEmptyCells()) checkPuzzle();
   }
   function createGrid(){
     gridEl.innerHTML = ""; cells = [];
@@ -178,6 +193,7 @@
   }
   function resetPuzzle(){
     for(let row=0; row<puzzle.size; row++) for(let col=0; col<puzzle.size; col++) current[row][col] = puzzle.givens[row][col];
+    solved = false;
     selected = null; inputBuffer = ""; createGrid(); showFeedback("Puzzle reset.");
   }
   function checkPuzzle(){
@@ -195,10 +211,13 @@
     }
     restoreSelected();
     if(wrongCount===0 && emptyCount===0) {
-      updateStreakOnCompletion();
-      updateBestTimeOnCompletion();
-      saveStats();
-      renderStats();
+      if (!solved) {
+        solved = true;
+        updateStreakOnCompletion();
+        updateBestTimeOnCompletion();
+        saveStats();
+        renderStats();
+      }
       showFeedback("Correct.");
     }
     else if(wrongCount===0) showFeedback("Some squares are still empty.");
