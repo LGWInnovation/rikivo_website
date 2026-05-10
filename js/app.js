@@ -13,7 +13,7 @@
   const bookLinkInline = document.getElementById("book-link-inline");
   const feedbackChip = document.getElementById("feedback-chip");
   const STATS_KEY = "rikivo_streak_stats_v1";
-  const todayKey = new Date().toISOString().slice(0, 10);
+  const todayKey = getLondonDateKey();
   const startedAt = Date.now();
 
   if (patreonLinkInline) patreonLinkInline.href = config.patreonUrl || "#";
@@ -26,6 +26,15 @@
   const stats = loadStats();
   const statsEl = createStatsDisplay();
   gridEl.style.gridTemplateColumns = `repeat(${puzzle.size}, 1fr)`;
+
+  function getLondonDateKey() {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/London",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).format(new Date());
+  }
 
   function loadStats() {
     try {
