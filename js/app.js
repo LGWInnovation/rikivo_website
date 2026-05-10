@@ -52,7 +52,6 @@
     el.className = "habit-line";
     el.id = "streak-stats";
     entryPanel.appendChild(el);
-    renderStats();
     return el;
   }
 
@@ -210,5 +209,5 @@
   checkBtn.addEventListener("click", checkPuzzle);
   resetBtn.addEventListener("click", resetPuzzle);
 
-  createGrid(); createDigitPad(); showFeedback("");
+  createGrid(); createDigitPad(); renderStats(); showFeedback("");
 })();
