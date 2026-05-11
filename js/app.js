@@ -6,19 +6,153 @@
   const gridEl = document.getElementById("puzzle-grid");
   const digitPadEl = document.getElementById("digit-pad");
   const backspaceBtn = document.getElementById("backspace-btn");
-  const clearBtn = document.getElementById("clear-btn");
-  const checkBtn = document.getElementById("check-btn");
   const resetBtn = document.getElementById("reset-btn");
   const patreonLinkInline = document.getElementById("patreon-link-inline");
   const bookLinkInline = document.getElementById("book-link-inline");
   const feedbackChip = document.getElementById("feedback-chip");
+  const STATS_KEY = "rikivo_streak_stats_v1";
+  const todayKey = getLondonDateKey();
+  const startedAt = Date.now();
 
   if (patreonLinkInline) patreonLinkInline.href = config.patreonUrl || "#";
   if (bookLinkInline) bookLinkInline.href = config.bookUrl || "#";
 
   const current = puzzle.givens.map(r => r.slice());
   let selected = null, cells = [], inputBuffer = "";
+  let replaceOnInput = false;
+  let solved = false;
+  let autoCheckTimer = null;
+  const stats = loadStats();
+  const statsEl = createStatsDisplay();
+  const shareBtn = createShareButton();
   gridEl.style.gridTemplateColumns = `repeat(${puzzle.size}, 1fr)`;
+
+  function getLondonDateKey() {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/London",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).format(new Date());
+  }
+
+  function loadStats() {
+    try {
+      const raw = localStorage.getItem(STATS_KEY);
+      if (!raw) return { currentStreak: 0, bestStreak: 0, lastCompletedDate: null, bestTimesByDate: {} };
+      const parsed = JSON.parse(raw);
+      return {
+        currentStreak: Number.isInteger(parsed.currentStreak) ? parsed.currentStreak : 0,
+        bestStreak: Number.isInteger(parsed.bestStreak) ? parsed.bestStreak : 0,
+        lastCompletedDate: typeof parsed.lastCompletedDate === "string" ? parsed.lastCompletedDate : null,
+        bestTimesByDate: parsed.bestTimesByDate && typeof parsed.bestTimesByDate === "object" ? parsed.bestTimesByDate : {}
+      };
+    } catch (_) {
+      return { currentStreak: 0, bestStreak: 0, lastCompletedDate: null, bestTimesByDate: {} };
+    }
+  }
+
+  function saveStats() {
+    localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+  }
+
+  function createStatsDisplay() {
+    const entryPanel = document.querySelector(".entry-panel");
+    if (!entryPanel) return null;
+    const el = document.createElement("p");
+    el.className = "habit-line";
+    el.id = "streak-stats";
+    entryPanel.appendChild(el);
+    return el;
+  }
+  function createShareButton() {
+    const entryPanel = document.querySelector(".entry-panel");
+    if (!entryPanel) return null;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "share-result-btn";
+    btn.className = "secondary-pill compact-pill";
+    btn.textContent = "Share Result";
+    btn.style.display = "none";
+    btn.style.margin = "8px auto 0";
+    btn.style.minWidth = "140px";
+    btn.addEventListener("click", shareResult);
+    entryPanel.appendChild(btn);
+    return btn;
+  }
+
+  function getShareText() {
+    const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
+    const bestTimeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : "—";
+    return `Rikivo — ${todayKey}\n⏱ ${bestTimeText}\n🔥 Streak: ${stats.currentStreak}`;
+  }
+
+  async function shareResult() {
+    const text = getShareText();
+    try {
+      if (navigator.share) {
+        await navigator.share({ text });
+        showTemporaryFeedback("Shared");
+        return;
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        showTemporaryFeedback("Copied to clipboard");
+        return;
+      }
+    } catch (_) {
+      // User cancellation or share errors should quietly fall back below.
+    }
+    showFeedback("Unable to share.");
+  }
+
+  function showTemporaryFeedback(message) {
+    showFeedback(message);
+    setTimeout(() => {
+      if (message === feedbackChip.textContent) showFeedback("");
+    }, 1400);
+  }
+
+  function renderStats() {
+    if (!statsEl) return;
+    const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
+    const bestTimeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : "—";
+    statsEl.textContent = `Streak: ${stats.currentStreak} day${stats.currentStreak === 1 ? "" : "s"} · Best: ${stats.bestStreak} · Time: ${bestTimeText}`;
+  }
+
+  function formatDuration(totalSeconds) {
+    const s = Math.max(0, Math.floor(totalSeconds));
+    const min = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${min}:${String(sec).padStart(2, "0")}`;
+  }
+
+  function updateBestTimeOnCompletion() {
+    const elapsedSeconds = Math.floor((Date.now() - startedAt) / 1000);
+    const existing = Number(stats.bestTimesByDate[todayKey]);
+    if (!Number.isFinite(existing) || elapsedSeconds < existing) {
+      stats.bestTimesByDate[todayKey] = elapsedSeconds;
+      return true;
+    }
+    return false;
+  }
+
+  function updateStreakOnCompletion() {
+    if (stats.lastCompletedDate === todayKey) return;
+    if (!stats.lastCompletedDate) {
+      stats.currentStreak = 1;
+    } else {
+      const prev = new Date(stats.lastCompletedDate + "T00:00:00Z");
+      const today = new Date(todayKey + "T00:00:00Z");
+      const dayDiff = Math.floor((today - prev) / 86400000);
+      if (dayDiff === 1) stats.currentStreak += 1;
+      else if (dayDiff > 1) stats.currentStreak = 1;
+    }
+    stats.lastCompletedDate = todayKey;
+    if (stats.currentStreak > stats.bestStreak) stats.bestStreak = stats.currentStreak;
+    saveStats();
+    renderStats();
+  }
 
   function showFeedback(msg){
     if(!feedbackChip) return;
@@ -39,6 +173,27 @@
     cell.style.fontWeight = value === puzzle.maxNumber ? "800" : "400";
     cells.forEach(c => c.classList.remove("correct","wrong"));
     restoreSelected(); showFeedback("");
+    scheduleAutoCheckIfFilled();
+  }
+  function hasAnyEmptyCells() {
+    for (let row = 0; row < puzzle.size; row++) {
+      for (let col = 0; col < puzzle.size; col++) {
+        if (puzzle.givens[row][col] !== null) continue;
+        if (current[row][col] === null || current[row][col] === "") return true;
+      }
+    }
+    return false;
+  }
+  function triggerAutoCheckIfFilled() {
+    if (solved) return;
+    if (!hasAnyEmptyCells()) checkPuzzle();
+  }
+  function scheduleAutoCheckIfFilled() {
+    if (autoCheckTimer) clearTimeout(autoCheckTimer);
+    autoCheckTimer = setTimeout(() => {
+      autoCheckTimer = null;
+      triggerAutoCheckIfFilled();
+    }, 700);
   }
   function createGrid(){
     gridEl.innerHTML = ""; cells = [];
@@ -56,7 +211,9 @@
         cell.textContent = value ?? "";
         cell.addEventListener("click", () => {
           if(given) return;
-          selected = {row, col}; inputBuffer = current[row][col] ? String(current[row][col]) : "";
+          selected = {row, col};
+          inputBuffer = current[row][col] ? String(current[row][col]) : "";
+          replaceOnInput = current[row][col] !== null && current[row][col] !== "";
           clearHighlights(); cell.classList.add("selected");
         });
         gridEl.appendChild(cell); cells.push(cell);
@@ -73,9 +230,11 @@
       else{
         btn.textContent = d;
         btn.addEventListener("click", () => {
-          if(!selected || inputBuffer.length >= 2) return;
-          const proposed = inputBuffer + String(d);
+          if(!selected) return;
+          if(!replaceOnInput && inputBuffer.length >= 2) return;
+          const proposed = replaceOnInput ? String(d) : inputBuffer + String(d);
           if(proposed.startsWith("0") || Number(proposed) > puzzle.maxNumber) return;
+          replaceOnInput = false;
           inputBuffer = proposed; commitBufferToSelected();
         });
       }
@@ -84,25 +243,23 @@
   }
   function backspace(){
     if(!selected) return;
+    if (autoCheckTimer) { clearTimeout(autoCheckTimer); autoCheckTimer = null; }
     inputBuffer = inputBuffer.slice(0,-1);
     if(!inputBuffer){
       current[selected.row][selected.col] = null;
       const cell = cellAt(selected.row, selected.col);
       cell.textContent = ""; cell.style.fontWeight = "400";
       cells.forEach(c => c.classList.remove("correct","wrong")); restoreSelected();
+      replaceOnInput = false;
     } else commitBufferToSelected();
     showFeedback("");
   }
-  function clearSelectedCell(){
-    if(!selected) return;
-    current[selected.row][selected.col] = null;
-    const cell = cellAt(selected.row, selected.col);
-    cell.textContent = ""; cell.style.fontWeight = "400"; inputBuffer = "";
-    cells.forEach(c => c.classList.remove("correct","wrong")); restoreSelected(); showFeedback("");
-  }
   function resetPuzzle(){
+    if (autoCheckTimer) { clearTimeout(autoCheckTimer); autoCheckTimer = null; }
     for(let row=0; row<puzzle.size; row++) for(let col=0; col<puzzle.size; col++) current[row][col] = puzzle.givens[row][col];
-    selected = null; inputBuffer = ""; createGrid(); showFeedback("Puzzle reset.");
+    solved = false;
+    if (shareBtn) shareBtn.style.display = "none";
+    selected = null; inputBuffer = ""; replaceOnInput = false; createGrid(); showFeedback("Puzzle reset.");
   }
   function checkPuzzle(){
     let wrongCount = 0, emptyCount = 0;
@@ -118,14 +275,22 @@
       }
     }
     restoreSelected();
-    if(wrongCount===0 && emptyCount===0) showFeedback("Correct.");
+    if(wrongCount===0 && emptyCount===0) {
+      if (!solved) {
+        solved = true;
+        updateStreakOnCompletion();
+        updateBestTimeOnCompletion();
+        saveStats();
+        renderStats();
+        if (shareBtn) shareBtn.style.display = "block";
+      }
+      showFeedback("Correct.");
+    }
     else if(wrongCount===0) showFeedback("Some squares are still empty.");
     else showFeedback("Some entries are wrong.");
   }
   backspaceBtn.addEventListener("click", backspace);
-  clearBtn.addEventListener("click", clearSelectedCell);
-  checkBtn.addEventListener("click", checkPuzzle);
   resetBtn.addEventListener("click", resetPuzzle);
 
-  createGrid(); createDigitPad(); showFeedback("");
+  createGrid(); createDigitPad(); renderStats(); showFeedback("");
 })();
