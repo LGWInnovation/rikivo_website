@@ -301,10 +301,9 @@
         if (shareBtn) shareBtn.style.display = "block";
         setLockedUIState();
       }
-      showFeedback("Correct.");
+      showFeedback("");
     }
-    else if(wrongCount===0) showFeedback("Some squares are still empty.");
-    else showFeedback("Some entries are wrong.");
+    else showFeedback("");
   }
   backspaceBtn.addEventListener("click", backspace);
   resetBtn.addEventListener("click", resetPuzzle);
