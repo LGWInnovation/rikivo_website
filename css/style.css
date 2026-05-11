@@ -40,14 +40,14 @@ body{min-height:100vh}
 .cell.correct{background:var(--correct)!important}
 .cell.wrong{background:var(--wrong)!important}
 .shade-1{background:var(--shade1)} .shade-2{background:var(--shade2)} .shade-3{background:var(--shade3)} .final-cell{background:#fff}
-.entry-panel{margin-top:10px;background:#ffffff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:10px}
+.entry-panel{margin-top:10px;background:#ffffff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:8px 8px 9px}
 .feedback-chip{margin:0 auto 7px;display:inline-block;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted);font-size:.88rem}
 .feedback-chip.hidden{display:none}
-.digit-pad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;max-width:216px;margin:0 auto}
-.digit-btn{min-height:44px;border-radius:13px;border:1px solid var(--line);background:#fff;font-size:.98rem;font-weight:700;cursor:pointer}
+.digit-pad{display:grid;grid-template-columns:repeat(3,56px);gap:6px;max-width:180px;margin:0 auto}
+.digit-btn{height:44px;border-radius:12px;border:1px solid var(--line);background:#fff;font-size:1rem;font-weight:700;cursor:pointer}
 .digit-btn.empty{visibility:hidden;pointer-events:none}
-.small-controls{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:7px}
-.compact-controls{max-width:250px;margin-left:auto;margin-right:auto}
+.small-controls{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin:7px auto 0}
+.compact-controls{max-width:180px}
 .primary-pill,.secondary-pill,.ghost-pill{
   display:inline-block;border-radius:999px;padding:10px 13px;text-decoration:none;text-align:center;font-weight:700;
   font-size:.93rem;cursor:pointer;border:0;font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;min-width:92px
@@ -71,6 +71,9 @@ body{min-height:100vh}
 @media (max-width:520px){
   .app-shell{padding-left:10px;padding-right:10px}
   .play-card,.section-card,.compact-card,.help-panel{border-radius:20px;padding-left:12px;padding-right:12px}
+  .digit-pad{grid-template-columns:repeat(3,52px);max-width:168px}
+  .digit-btn{height:42px}
+  .compact-controls{max-width:168px}
 }
 
 
