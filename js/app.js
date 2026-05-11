@@ -25,6 +25,7 @@
   let autoCheckTimer = null;
   const stats = loadStats();
   const statsEl = createStatsDisplay();
+  const shareBtn = createShareButton();
   gridEl.style.gridTemplateColumns = `repeat(${puzzle.size}, 1fr)`;
 
   function getLondonDateKey() {
@@ -64,6 +65,53 @@
     el.id = "streak-stats";
     entryPanel.appendChild(el);
     return el;
+  }
+  function createShareButton() {
+    const entryPanel = document.querySelector(".entry-panel");
+    if (!entryPanel) return null;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "share-result-btn";
+    btn.className = "secondary-pill compact-pill";
+    btn.textContent = "Share Result";
+    btn.style.display = "none";
+    btn.style.margin = "8px auto 0";
+    btn.style.minWidth = "140px";
+    btn.addEventListener("click", shareResult);
+    entryPanel.appendChild(btn);
+    return btn;
+  }
+
+  function getShareText() {
+    const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
+    const bestTimeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : "—";
+    return `Rikivo — ${todayKey}\n⏱ ${bestTimeText}\n🔥 Streak: ${stats.currentStreak}`;
+  }
+
+  async function shareResult() {
+    const text = getShareText();
+    try {
+      if (navigator.share) {
+        await navigator.share({ text });
+        showTemporaryFeedback("Shared");
+        return;
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text);
+        showTemporaryFeedback("Copied to clipboard");
+        return;
+      }
+    } catch (_) {
+      // User cancellation or share errors should quietly fall back below.
+    }
+    showFeedback("Unable to share.");
+  }
+
+  function showTemporaryFeedback(message) {
+    showFeedback(message);
+    setTimeout(() => {
+      if (message === feedbackChip.textContent) showFeedback("");
+    }, 1400);
   }
 
   function renderStats() {
@@ -214,6 +262,7 @@
     if (autoCheckTimer) { clearTimeout(autoCheckTimer); autoCheckTimer = null; }
     for(let row=0; row<puzzle.size; row++) for(let col=0; col<puzzle.size; col++) current[row][col] = puzzle.givens[row][col];
     solved = false;
+    if (shareBtn) shareBtn.style.display = "none";
     selected = null; inputBuffer = ""; createGrid(); showFeedback("Puzzle reset.");
   }
   function checkPuzzle(){
@@ -237,6 +286,7 @@
         updateBestTimeOnCompletion();
         saveStats();
         renderStats();
+        if (shareBtn) shareBtn.style.display = "block";
       }
       showFeedback("Correct.");
     }
