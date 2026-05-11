@@ -6,8 +6,6 @@
   const gridEl = document.getElementById("puzzle-grid");
   const digitPadEl = document.getElementById("digit-pad");
   const backspaceBtn = document.getElementById("backspace-btn");
-  const clearBtn = document.getElementById("clear-btn");
-  const checkBtn = document.getElementById("check-btn");
   const resetBtn = document.getElementById("reset-btn");
   const patreonLinkInline = document.getElementById("patreon-link-inline");
   const bookLinkInline = document.getElementById("book-link-inline");
@@ -21,6 +19,7 @@
 
   const current = puzzle.givens.map(r => r.slice());
   let selected = null, cells = [], inputBuffer = "";
+  let replaceOnInput = false;
   let solved = false;
   let autoCheckTimer = null;
   const stats = loadStats();
@@ -212,7 +211,9 @@
         cell.textContent = value ?? "";
         cell.addEventListener("click", () => {
           if(given) return;
-          selected = {row, col}; inputBuffer = current[row][col] ? String(current[row][col]) : "";
+          selected = {row, col};
+          inputBuffer = current[row][col] ? String(current[row][col]) : "";
+          replaceOnInput = current[row][col] !== null && current[row][col] !== "";
           clearHighlights(); cell.classList.add("selected");
         });
         gridEl.appendChild(cell); cells.push(cell);
@@ -229,9 +230,11 @@
       else{
         btn.textContent = d;
         btn.addEventListener("click", () => {
-          if(!selected || inputBuffer.length >= 2) return;
-          const proposed = inputBuffer + String(d);
+          if(!selected) return;
+          if(!replaceOnInput && inputBuffer.length >= 2) return;
+          const proposed = replaceOnInput ? String(d) : inputBuffer + String(d);
           if(proposed.startsWith("0") || Number(proposed) > puzzle.maxNumber) return;
+          replaceOnInput = false;
           inputBuffer = proposed; commitBufferToSelected();
         });
       }
@@ -247,23 +250,16 @@
       const cell = cellAt(selected.row, selected.col);
       cell.textContent = ""; cell.style.fontWeight = "400";
       cells.forEach(c => c.classList.remove("correct","wrong")); restoreSelected();
+      replaceOnInput = false;
     } else commitBufferToSelected();
     showFeedback("");
-  }
-  function clearSelectedCell(){
-    if(!selected) return;
-    if (autoCheckTimer) { clearTimeout(autoCheckTimer); autoCheckTimer = null; }
-    current[selected.row][selected.col] = null;
-    const cell = cellAt(selected.row, selected.col);
-    cell.textContent = ""; cell.style.fontWeight = "400"; inputBuffer = "";
-    cells.forEach(c => c.classList.remove("correct","wrong")); restoreSelected(); showFeedback("");
   }
   function resetPuzzle(){
     if (autoCheckTimer) { clearTimeout(autoCheckTimer); autoCheckTimer = null; }
     for(let row=0; row<puzzle.size; row++) for(let col=0; col<puzzle.size; col++) current[row][col] = puzzle.givens[row][col];
     solved = false;
     if (shareBtn) shareBtn.style.display = "none";
-    selected = null; inputBuffer = ""; createGrid(); showFeedback("Puzzle reset.");
+    selected = null; inputBuffer = ""; replaceOnInput = false; createGrid(); showFeedback("Puzzle reset.");
   }
   function checkPuzzle(){
     let wrongCount = 0, emptyCount = 0;
@@ -294,8 +290,6 @@
     else showFeedback("Some entries are wrong.");
   }
   backspaceBtn.addEventListener("click", backspace);
-  clearBtn.addEventListener("click", clearSelectedCell);
-  checkBtn.addEventListener("click", checkPuzzle);
   resetBtn.addEventListener("click", resetPuzzle);
 
   createGrid(); createDigitPad(); renderStats(); showFeedback("");
