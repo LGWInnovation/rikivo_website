@@ -39,16 +39,17 @@
   function loadStats() {
     try {
       const raw = localStorage.getItem(STATS_KEY);
-      if (!raw) return { currentStreak: 0, bestStreak: 0, lastCompletedDate: null, bestTimesByDate: {} };
+      if (!raw) return { currentStreak: 0, bestStreak: 0, lastCompletedDate: null, bestTimesByDate: {}, solvedDates: {} };
       const parsed = JSON.parse(raw);
       return {
         currentStreak: Number.isInteger(parsed.currentStreak) ? parsed.currentStreak : 0,
         bestStreak: Number.isInteger(parsed.bestStreak) ? parsed.bestStreak : 0,
         lastCompletedDate: typeof parsed.lastCompletedDate === "string" ? parsed.lastCompletedDate : null,
-        bestTimesByDate: parsed.bestTimesByDate && typeof parsed.bestTimesByDate === "object" ? parsed.bestTimesByDate : {}
+        bestTimesByDate: parsed.bestTimesByDate && typeof parsed.bestTimesByDate === "object" ? parsed.bestTimesByDate : {},
+        solvedDates: parsed.solvedDates && typeof parsed.solvedDates === "object" ? parsed.solvedDates : {}
       };
     } catch (_) {
-      return { currentStreak: 0, bestStreak: 0, lastCompletedDate: null, bestTimesByDate: {} };
+      return { currentStreak: 0, bestStreak: 0, lastCompletedDate: null, bestTimesByDate: {}, solvedDates: {} };
     }
   }
 
@@ -130,7 +131,7 @@
   function updateBestTimeOnCompletion() {
     const elapsedSeconds = Math.floor((Date.now() - startedAt) / 1000);
     const existing = Number(stats.bestTimesByDate[todayKey]);
-    if (!Number.isFinite(existing) || elapsedSeconds < existing) {
+    if (!Number.isFinite(existing)) {
       stats.bestTimesByDate[todayKey] = elapsedSeconds;
       return true;
     }
@@ -164,7 +165,7 @@
   function restoreSelected(){ if(selected) cellAt(selected.row, selected.col).classList.add("selected"); }
 
   function commitBufferToSelected(){
-    if(!selected || !inputBuffer) return;
+    if(solved || !selected || !inputBuffer) return;
     const value = Number(inputBuffer);
     if(!Number.isInteger(value) || value < 1 || value > puzzle.maxNumber) return;
     current[selected.row][selected.col] = value;
@@ -188,6 +189,19 @@
     if (solved) return;
     if (!hasAnyEmptyCells()) checkPuzzle();
   }
+  function setLockedUIState() {
+    digitPadEl.querySelectorAll("button").forEach(btn => { btn.disabled = true; });
+    if (backspaceBtn) {
+      backspaceBtn.disabled = true;
+      backspaceBtn.style.opacity = "0.6";
+      backspaceBtn.style.pointerEvents = "none";
+    }
+    if (resetBtn) {
+      resetBtn.disabled = true;
+      resetBtn.style.opacity = "0.6";
+      resetBtn.style.pointerEvents = "none";
+    }
+  }
   function scheduleAutoCheckIfFilled() {
     if (autoCheckTimer) clearTimeout(autoCheckTimer);
     autoCheckTimer = setTimeout(() => {
@@ -210,7 +224,7 @@
         if(value === puzzle.maxNumber) cell.style.fontWeight = "800";
         cell.textContent = value ?? "";
         cell.addEventListener("click", () => {
-          if(given) return;
+          if(given || solved) return;
           selected = {row, col};
           inputBuffer = current[row][col] ? String(current[row][col]) : "";
           replaceOnInput = current[row][col] !== null && current[row][col] !== "";
@@ -242,7 +256,7 @@
     });
   }
   function backspace(){
-    if(!selected) return;
+    if(solved || !selected) return;
     if (autoCheckTimer) { clearTimeout(autoCheckTimer); autoCheckTimer = null; }
     inputBuffer = inputBuffer.slice(0,-1);
     if(!inputBuffer){
@@ -255,6 +269,7 @@
     showFeedback("");
   }
   function resetPuzzle(){
+    if (solved || stats.solvedDates[todayKey]) return;
     if (autoCheckTimer) { clearTimeout(autoCheckTimer); autoCheckTimer = null; }
     for(let row=0; row<puzzle.size; row++) for(let col=0; col<puzzle.size; col++) current[row][col] = puzzle.givens[row][col];
     solved = false;
@@ -278,11 +293,13 @@
     if(wrongCount===0 && emptyCount===0) {
       if (!solved) {
         solved = true;
+        stats.solvedDates[todayKey] = true;
         updateStreakOnCompletion();
         updateBestTimeOnCompletion();
         saveStats();
         renderStats();
         if (shareBtn) shareBtn.style.display = "block";
+        setLockedUIState();
       }
       showFeedback("Correct.");
     }
@@ -292,5 +309,11 @@
   backspaceBtn.addEventListener("click", backspace);
   resetBtn.addEventListener("click", resetPuzzle);
 
-  createGrid(); createDigitPad(); renderStats(); showFeedback("");
+  createGrid(); createDigitPad(); renderStats();
+  if (stats.solvedDates[todayKey]) {
+    solved = true;
+    if (shareBtn) shareBtn.style.display = "block";
+    setLockedUIState();
+  }
+  showFeedback("");
 })();
