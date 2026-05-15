@@ -50,8 +50,8 @@ body{min-height:100vh}
 .digit-pad{display:grid;grid-template-columns:repeat(3,53px);gap:4px;max-width:166px;margin:0 auto}
 .digit-btn{height:39px;border-radius:11px;border:1px solid var(--line);background:#fff;font-size:.96rem;font-weight:700;cursor:pointer}
 .digit-btn.empty{visibility:hidden;pointer-events:none}
-.small-controls{display:grid;grid-template-columns:repeat(2,1fr);gap:4px;margin:3px auto 0}
-.compact-controls{max-width:166px}
+.small-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:3px auto 0}
+.compact-controls{max-width:250px}
 .primary-pill,.secondary-pill,.ghost-pill{
   display:inline-block;border-radius:999px;padding:10px 13px;text-decoration:none;text-align:center;font-weight:700;
   font-size:.93rem;cursor:pointer;border:0;font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;min-width:92px

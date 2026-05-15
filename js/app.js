@@ -6,6 +6,7 @@
   const gridEl = document.getElementById("puzzle-grid");
   const digitPadEl = document.getElementById("digit-pad");
   const backspaceBtn = document.getElementById("backspace-btn");
+  const zeroBtn = document.getElementById("zero-btn");
   const resetBtn = document.getElementById("reset-btn");
   const patreonLinkInline = document.getElementById("patreon-link-inline");
   const bookLinkInline = document.getElementById("book-link-inline");
@@ -275,7 +276,7 @@
   }
   function createDigitPad(){
     digitPadEl.innerHTML = "";
-    const layout = [1,2,3,4,5,6,7,8,9,null,0,null];
+    const layout = [1,2,3,4,5,6,7,8,9];
     layout.forEach(d => {
       const btn = document.createElement("button");
       btn.type = "button"; btn.className = "digit-btn";
@@ -345,6 +346,16 @@
     else showFeedback("");
   }
   backspaceBtn.addEventListener("click", backspace);
+  if (zeroBtn) {
+    zeroBtn.addEventListener("click", () => {
+      if(!selected) return;
+      if(!replaceOnInput && inputBuffer.length >= 2) return;
+      const proposed = replaceOnInput ? "0" : inputBuffer + "0";
+      if(proposed.startsWith("0") || Number(proposed) > puzzle.maxNumber) return;
+      replaceOnInput = false;
+      inputBuffer = proposed; commitBufferToSelected();
+    });
+  }
   resetBtn.addEventListener("click", resetPuzzle);
   if (rulesModal && rulesCloseBtn) {
     rulesCloseBtn.addEventListener("click", closeRules);
