@@ -127,6 +127,21 @@
     // Silent failure when sharing/copy is unsupported.
   }
 
+  function closeMenu() {
+    if (menuModal) menuModal.classList.add("hidden");
+  }
+  function closeRules() {
+    if (rulesModal) rulesModal.classList.add("hidden");
+  }
+  function openMenu() {
+    closeRules();
+    if (menuModal) menuModal.classList.remove("hidden");
+  }
+  function openRules() {
+    closeMenu();
+    if (rulesModal) rulesModal.classList.remove("hidden");
+  }
+
   function showTemporaryFeedback(message) {
     showFeedback(message);
     setTimeout(() => {
@@ -331,25 +346,21 @@
   }
   backspaceBtn.addEventListener("click", backspace);
   resetBtn.addEventListener("click", resetPuzzle);
-  if (rulesBtn && rulesModal && rulesCloseBtn) {
-    rulesBtn.addEventListener("click", () => rulesModal.classList.remove("hidden"));
-    rulesCloseBtn.addEventListener("click", () => rulesModal.classList.add("hidden"));
-    rulesModal.addEventListener("click", (e) => { if (e.target === rulesModal) rulesModal.classList.add("hidden"); });
+  if (rulesModal && rulesCloseBtn) {
+    rulesCloseBtn.addEventListener("click", closeRules);
+    rulesModal.addEventListener("click", (e) => { if (e.target === rulesModal) closeRules(); });
   }
   if (menuBtn && menuModal && menuCloseBtn) {
-    menuBtn.addEventListener("click", () => menuModal.classList.remove("hidden"));
-    menuCloseBtn.addEventListener("click", () => menuModal.classList.add("hidden"));
-    menuModal.addEventListener("click", (e) => { if (e.target === menuModal) menuModal.classList.add("hidden"); });
+    menuBtn.addEventListener("click", openMenu);
+    menuCloseBtn.addEventListener("click", closeMenu);
+    menuModal.addEventListener("click", (e) => { if (e.target === menuModal) closeMenu(); });
   }
   if (menuRulesBtn && menuModal && rulesModal) {
-    menuRulesBtn.addEventListener("click", () => {
-      menuModal.classList.add("hidden");
-      rulesModal.classList.remove("hidden");
-    });
+    menuRulesBtn.addEventListener("click", openRules);
   }
   if (menuShareBtn && menuModal) {
     menuShareBtn.addEventListener("click", async () => {
-      menuModal.classList.add("hidden");
+      closeMenu();
       await shareResult();
     });
   }
