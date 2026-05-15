@@ -9,8 +9,7 @@
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif}
 body{min-height:100vh}
 .app-shell{width:min(100%,780px);margin:0 auto;padding:10px 12px 22px}
-.topbar{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:0;background:var(--hero-tint);border:1px solid #1b4ab8;border-radius:20px 20px 0 0;padding:5px 10px 4px;position:relative}
-.menu-btn{padding:4px 12px;font-size:.8rem;min-width:auto;color:#eaf0ff;border-color:#7f9de0;background:rgba(255,255,255,.08)}
+.topbar{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:0;background:var(--hero-tint);border:1px solid #1b4ab8;border-radius:20px 20px 0 0;padding:12px 10px 8px}
 .brand-lockup{text-align:center}
 .brand-title,.daily-hero h1,.section-card h2,.compact-card h2{
   font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;letter-spacing:0.04em
@@ -28,7 +27,7 @@ body{min-height:100vh}
 .hero-tint,.support-tint{background:var(--brand-soft)}
 .light-teal-tint{background:var(--light-teal)}
 .plain-card{background:var(--panel)}
-.play-card{padding:8px 9px 8px;margin-bottom:7px;border-top-left-radius:0;border-top-right-radius:0}
+.play-card{padding:10px 10px 11px;margin-bottom:10px;border-top-left-radius:0;border-top-right-radius:0}
 .board-wrap{display:flex;justify-content:center}
 .puzzle-grid{display:grid;gap:8px}
 .cell{
@@ -76,7 +75,6 @@ body{min-height:100vh}
 .rules-card h3{margin:0 0 8px;color:#17356e}
 .rules-card ul{margin:0 0 10px 18px;padding:0;color:#334a72;font-size:.92rem;line-height:1.35}
 .rules-close-btn{width:100%}
-.menu-actions{display:grid;gap:7px}
 .footer-line{display:block;width:120px;height:1px;background:var(--line);margin:0 auto 10px}
 @media (min-width:760px){.legend-grid{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:520px){
