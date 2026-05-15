@@ -28,7 +28,7 @@ body{min-height:100vh}
 .hero-tint,.support-tint{background:var(--brand-soft)}
 .light-teal-tint{background:var(--light-teal)}
 .plain-card{background:var(--panel)}
-.play-card{padding:8px 9px 8px;margin-bottom:7px;border-top-left-radius:0;border-top-right-radius:0}
+.play-card{padding:10px 10px 11px;margin-bottom:10px;border-top-left-radius:0;border-top-right-radius:0}
 .board-wrap{display:flex;justify-content:center}
 .puzzle-grid{display:grid;gap:8px}
 .cell{
