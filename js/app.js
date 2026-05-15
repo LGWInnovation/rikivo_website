@@ -138,11 +138,6 @@
     closeRules();
     if (menuModal) menuModal.classList.remove("hidden");
   }
-  function openRules() {
-    closeMenu();
-    if (rulesModal) rulesModal.classList.remove("hidden");
-  }
-
   function showTemporaryFeedback(message) {
     showFeedback(message);
     setTimeout(() => {
