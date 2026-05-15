@@ -11,6 +11,7 @@
   const bookLinkInline = document.getElementById("book-link-inline");
   const feedbackChip = document.getElementById("feedback-chip");
   const statusBarEl = document.getElementById("status-bar");
+  const rulesBtn = document.getElementById("rules-btn");
   const rulesModal = document.getElementById("rules-modal");
   const rulesCloseBtn = document.getElementById("rules-close-btn");
   const menuBtn = document.getElementById("menu-btn");
