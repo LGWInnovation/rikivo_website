@@ -52,7 +52,7 @@ body{min-height:100vh}
 .digit-pad{display:grid;grid-template-columns:repeat(3,var(--key-size));gap:var(--key-gap);justify-content:center;margin:0 auto}
 .digit-btn{width:var(--key-size);height:var(--key-size);min-width:var(--key-size);max-width:var(--key-size);padding:0;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-sizing:border-box}
 .digit-btn.empty{visibility:hidden;pointer-events:none}
-.small-controls{display:grid;grid-template-columns:var(--control-width) var(--key-size) var(--control-width);grid-template-areas:"back zero reset";gap:var(--key-gap);align-items:center;justify-content:center;width:max-content;max-width:100%;margin:6px auto 0}
+.small-controls{display:grid;grid-template-columns:var(--control-width) var(--key-size) var(--control-width);grid-template-areas:"back zero reset";gap:var(--key-gap);align-items:center;justify-content:center;width:max-content;max-width:100%;margin:var(--key-gap) 0 0}
 .compact-controls{max-width:none}
 .compact-pill{padding:0;min-width:0}
 #backspace-btn{grid-area:back;width:var(--control-width);height:var(--key-size);box-sizing:border-box}
