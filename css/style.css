@@ -51,7 +51,7 @@ body{min-height:100vh}
 .digit-pad{display:grid;grid-template-columns:repeat(3,48px);gap:8px;max-width:160px;margin:0 auto}
 .digit-btn{width:48px;padding:0;background:#fff;cursor:pointer}
 .digit-btn.empty{visibility:hidden;pointer-events:none}
-.small-controls{display:grid;grid-template-columns:auto 48px auto;gap:8px;justify-content:center;align-items:center;width:max-content;max-width:100%;margin:0 auto}
+.small-controls{display:grid;grid-template-columns:auto 48px auto;gap:8px;justify-content:center;align-items:center;width:max-content;max-width:100%;margin:10px auto 0}
 .compact-controls{max-width:none}
 .compact-pill{padding:0 14px;min-width:92px}
 .primary-pill,.secondary-pill,.ghost-pill,.digit-btn,.compact-pill{
