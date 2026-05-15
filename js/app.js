@@ -124,7 +124,7 @@
     } catch (_) {
       // User cancellation or share errors should quietly fall back below.
     }
-    showFeedback("Unable to share.");
+    // Silent failure when sharing/copy is unsupported.
   }
 
   function showTemporaryFeedback(message) {
