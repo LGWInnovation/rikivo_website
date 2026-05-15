@@ -10,6 +10,10 @@
   const patreonLinkInline = document.getElementById("patreon-link-inline");
   const bookLinkInline = document.getElementById("book-link-inline");
   const feedbackChip = document.getElementById("feedback-chip");
+  const statusBarEl = document.getElementById("status-bar");
+  const rulesBtn = document.getElementById("rules-btn");
+  const rulesModal = document.getElementById("rules-modal");
+  const rulesCloseBtn = document.getElementById("rules-close-btn");
   const STATS_KEY = "rikivo_streak_stats_v1";
   const todayKey = getLondonDateKey();
   const startedAt = Date.now();
@@ -58,12 +62,19 @@
   }
 
   function createStatsDisplay() {
-    const entryPanel = document.querySelector(".entry-panel");
-    if (!entryPanel) return null;
-    const el = document.createElement("p");
-    el.className = "habit-line";
+    if (!statusBarEl) return null;
+    const el = document.createElement("div");
+    el.className = "status-pill";
     el.id = "streak-stats";
-    entryPanel.appendChild(el);
+    statusBarEl.appendChild(el);
+    const bestEl = document.createElement("div");
+    bestEl.className = "status-pill";
+    bestEl.id = "best-stats";
+    statusBarEl.appendChild(bestEl);
+    const timeEl = document.createElement("div");
+    timeEl.className = "status-pill";
+    timeEl.id = "time-stats";
+    statusBarEl.appendChild(timeEl);
     return el;
   }
   function createShareButton() {
@@ -118,7 +129,11 @@
     if (!statsEl) return;
     const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
     const bestTimeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : "—";
-    statsEl.textContent = `Streak: ${stats.currentStreak} day${stats.currentStreak === 1 ? "" : "s"} · Best: ${stats.bestStreak} · Time: ${bestTimeText}`;
+    statsEl.textContent = `Streak: ${stats.currentStreak}`;
+    const bestEl = document.getElementById("best-stats");
+    const timeEl = document.getElementById("time-stats");
+    if (bestEl) bestEl.textContent = `Best: ${stats.bestStreak}`;
+    if (timeEl) timeEl.textContent = `Time: ${bestTimeText}`;
   }
 
   function formatDuration(totalSeconds) {
@@ -307,6 +322,11 @@
   }
   backspaceBtn.addEventListener("click", backspace);
   resetBtn.addEventListener("click", resetPuzzle);
+  if (rulesBtn && rulesModal && rulesCloseBtn) {
+    rulesBtn.addEventListener("click", () => rulesModal.classList.remove("hidden"));
+    rulesCloseBtn.addEventListener("click", () => rulesModal.classList.add("hidden"));
+    rulesModal.addEventListener("click", (e) => { if (e.target === rulesModal) rulesModal.classList.add("hidden"); });
+  }
 
   createGrid(); createDigitPad(); renderStats();
   if (stats.solvedDates[todayKey]) {

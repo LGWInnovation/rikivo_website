@@ -9,7 +9,7 @@
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif}
 body{min-height:100vh}
 .app-shell{width:min(100%,780px);margin:0 auto;padding:10px 12px 22px}
-.topbar{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:0;background:var(--hero-tint);border:1px solid #1b4ab8;border-radius:20px 20px 0 0;padding:12px 10px 8px}
+.topbar{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:0;background:var(--hero-tint);border:1px solid #1b4ab8;border-radius:20px 20px 0 0;padding:8px 10px 6px}
 .brand-lockup{text-align:center}
 .brand-title,.daily-hero h1,.section-card h2,.compact-card h2{
   font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;letter-spacing:0.04em
@@ -17,9 +17,11 @@ body{min-height:100vh}
 .brand-title{font-size:clamp(2.3rem,6.6vw,3.25rem);font-weight:900;line-height:1;color:#ffffff}
 .tm{font-size:.38em;vertical-align:super}
 .tagline,.section-copy,.small-note,.bottom-note,.habit-line{color:var(--muted)}
-.daily-hero{text-align:center;margin-bottom:0;background:var(--hero-tint);color:#fff;padding:4px 12px 9px;border-left:1px solid #1b4ab8;border-right:1px solid #1b4ab8}
+.daily-hero{text-align:center;margin-bottom:0;background:var(--hero-tint);color:#fff;padding:2px 10px 7px;border-left:1px solid #1b4ab8;border-right:1px solid #1b4ab8}
 .daily-hero h1{margin:0 0 2px;font-size:clamp(1.15rem,2.8vw,1.4rem);font-weight:700;color:#eaf0ff;text-transform:uppercase;letter-spacing:.06em}
 .daily-hero p{margin:0 auto;max-width:570px;font-size:.9rem;color:#d9e4ff;line-height:1.35}
+.instruction-row{display:flex;align-items:center;justify-content:center;gap:8px;max-width:620px;margin:0 auto}
+.rules-btn{padding:6px 12px;font-size:.82rem;min-width:auto;color:#eaf0ff;border-color:#7f9de0;background:rgba(255,255,255,.08)}
 .play-card,.section-card,.compact-card,.help-panel{
   background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-xl);box-shadow:var(--shadow)
 }
@@ -41,6 +43,8 @@ body{min-height:100vh}
 .cell.wrong{background:var(--wrong)!important}
 .shade-1{background:var(--shade1)} .shade-2{background:var(--shade2)} .shade-3{background:var(--shade3)} .final-cell{background:#fff}
 .entry-panel{margin-top:7px;background:#ffffff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:6px 8px 7px}
+.status-bar{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:0 auto 6px;max-width:420px}
+.status-pill{font-size:.8rem;color:#335078;background:#f5f8ff;border:1px solid #d5def0;border-radius:999px;padding:4px 8px}
 .feedback-chip{margin:0 auto 6px;display:inline-block;padding:5px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted);font-size:.85rem}
 .feedback-chip.hidden{display:none}
 .digit-pad{display:grid;grid-template-columns:repeat(3,56px);gap:6px;max-width:180px;margin:0 auto}
@@ -66,11 +70,22 @@ body{min-height:100vh}
 .compact-actions{max-width:420px}
 .center-copy,.center{text-align:center}
 .bottom-note{text-align:center;padding:8px 0 5px;font-size:.88rem}
+.rules-modal{position:fixed;inset:0;background:rgba(8,19,47,.45);display:flex;align-items:center;justify-content:center;padding:14px;z-index:50}
+.rules-modal.hidden{display:none}
+.rules-card{width:min(100%,420px);background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+.rules-card h3{margin:0 0 8px;color:#17356e}
+.rules-card ul{margin:0 0 10px 18px;padding:0;color:#334a72;font-size:.92rem;line-height:1.35}
+.rules-close-btn{width:100%}
 .footer-line{display:block;width:120px;height:1px;background:var(--line);margin:0 auto 10px}
 @media (min-width:760px){.legend-grid{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:520px){
   .app-shell{padding-left:10px;padding-right:10px}
   .play-card,.section-card,.compact-card,.help-panel{border-radius:20px;padding-left:12px;padding-right:12px}
+  .topbar{padding-top:7px;padding-bottom:5px}
+  .brand-title{font-size:clamp(2rem,8vw,2.5rem)}
+  .instruction-row{gap:6px}
+  .tagline{font-size:.83rem}
+  .rules-btn{padding:5px 10px}
   .digit-pad{grid-template-columns:repeat(3,52px);max-width:168px}
   .digit-btn{height:42px}
   .compact-controls{max-width:168px}
