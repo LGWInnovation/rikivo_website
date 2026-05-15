@@ -88,7 +88,7 @@ body{min-height:100vh}
   .instruction-row{gap:6px}
   .digit-pad{grid-template-columns:repeat(3,48px);max-width:154px}
   .digit-btn{height:36px}
-  .compact-controls{max-width:236px}
+  .compact-controls{max-width:154px}
   .entry-panel{margin-top:3px;padding-top:3px;padding-bottom:4px}
   .status-bar{margin-bottom:3px}
 }
