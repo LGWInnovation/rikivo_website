@@ -5,6 +5,7 @@
   --light-teal:#f2f5fb; --selected:#ffd966; --correct:#edf2fc; --wrong:#fee2e2;
   --shade1:#ffffff; --shade2:#cfd5dd; --shade3:#9ea7b2; --grid-line:#b7c2ce;
   --shadow:0 10px 28px rgba(15,23,42,.06); --radius-xl:26px; --radius-lg:20px;
+  --key-size:48px; --key-gap:6px;
 }
 html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif}
 body{min-height:100vh}
@@ -47,11 +48,11 @@ body{min-height:100vh}
 .status-pill{font-size:.8rem;color:#335078;background:#f5f8ff;border:1px solid #d5def0;border-radius:999px;padding:4px 8px}
 .feedback-chip{margin:0 auto 4px;display:inline-block;padding:5px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted);font-size:.85rem}
 .feedback-chip.hidden{display:none}
-.keypad-panel{display:grid;grid-template-columns:auto 48px auto;grid-template-areas:"digits digits digits" "keyrow keyrow keyrow";column-gap:6px;row-gap:6px;justify-content:center;align-items:center}
-.digit-pad{grid-area:digits;display:grid;grid-template-columns:repeat(3,48px);gap:6px;margin:0 auto}
-.digit-btn{width:48px;padding:0;background:#fff;cursor:pointer}
+.keypad-panel{display:grid;grid-template-columns:auto var(--key-size) auto;grid-template-areas:"digits digits digits" "keyrow keyrow keyrow";column-gap:var(--key-gap);row-gap:var(--key-gap);justify-content:center;align-items:center}
+.digit-pad{grid-area:digits;display:grid;grid-template-columns:repeat(3,var(--key-size));gap:var(--key-gap);margin:0 auto}
+.digit-btn{width:var(--key-size);height:var(--key-size);padding:0;background:#fff;cursor:pointer}
 .digit-btn.empty{visibility:hidden;pointer-events:none}
-.small-controls{display:grid;grid-template-columns:auto 48px auto;grid-template-areas:"back zero reset";gap:6px;justify-content:center;align-items:center;width:max-content;max-width:100%;margin:0 auto}
+.small-controls{display:grid;grid-template-columns:auto var(--key-size) auto;grid-template-areas:"back zero reset";gap:var(--key-gap);justify-content:center;align-items:center;width:max-content;max-width:100%;margin:0 auto}
 .compact-controls{grid-area:keyrow;max-width:none}
 .compact-pill{padding:0 14px;min-width:92px}
 #backspace-btn{grid-area:back}
@@ -92,9 +93,7 @@ body{min-height:100vh}
   .menu-btn{right:7px;top:4px;padding:3px 8px;font-size:.74rem}
   .brand-title{font-size:clamp(2rem,8vw,2.5rem)}
   .instruction-row{gap:6px}
-  .keypad-panel{grid-template-columns:auto 44px auto;column-gap:6px;row-gap:6px}
-  .digit-pad{grid-template-columns:repeat(3,44px);gap:6px}
-  .small-controls{grid-template-columns:auto 44px auto;gap:6px}
+  :root{--key-size:44px; --key-gap:6px}
   .compact-pill{padding:0 10px;min-width:80px;font-size:.88rem}
   .entry-panel{margin-top:2px;padding:5px}
   .status-bar{margin-bottom:2px}
