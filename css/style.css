@@ -28,7 +28,7 @@ body{min-height:100vh}
 .hero-tint,.support-tint{background:var(--brand-soft)}
 .light-teal-tint{background:var(--light-teal)}
 .plain-card{background:var(--panel)}
-.play-card{padding:8px 9px 8px;margin-bottom:7px;border-top-left-radius:0;border-top-right-radius:0}
+.play-card{padding:10px 10px 11px;margin-bottom:10px;border-top-left-radius:0;border-top-right-radius:0}
 .board-wrap{display:flex;justify-content:center}
 .puzzle-grid{display:grid;gap:8px}
 .cell{
@@ -84,6 +84,7 @@ body{min-height:100vh}
   .play-card,.section-card,.compact-card,.help-panel{border-radius:20px;padding-left:12px;padding-right:12px}
   .topbar{padding-top:4px;padding-bottom:4px}
   .menu-btn{right:7px;top:4px;padding:3px 8px;font-size:.74rem}
+  .menu-btn{padding:3px 9px;font-size:.74rem}
   .brand-title{font-size:clamp(2rem,8vw,2.5rem)}
   .instruction-row{gap:6px}
   .digit-pad{grid-template-columns:repeat(3,50px);max-width:160px}
