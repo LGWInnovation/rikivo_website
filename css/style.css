@@ -47,14 +47,15 @@ body{min-height:100vh}
 .status-pill{font-size:.8rem;color:#335078;background:#f5f8ff;border:1px solid #d5def0;border-radius:999px;padding:4px 8px}
 .feedback-chip{margin:0 auto 6px;display:inline-block;padding:5px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted);font-size:.85rem}
 .feedback-chip.hidden{display:none}
-.digit-pad{display:grid;grid-template-columns:repeat(3,53px);gap:4px;max-width:166px;margin:0 auto}
-.digit-btn{height:39px;border-radius:11px;border:1px solid var(--line);background:#fff;font-size:.96rem;font-weight:700;cursor:pointer}
+.digit-pad{display:grid;grid-template-columns:repeat(3,48px);gap:8px;max-width:160px;margin:0 auto}
+.digit-btn{width:48px;padding:0;background:#fff;cursor:pointer}
 .digit-btn.empty{visibility:hidden;pointer-events:none}
-.small-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:260px;margin:6px auto 0}
-.compact-controls{max-width:260px}
-.primary-pill,.secondary-pill,.ghost-pill{
-  display:inline-block;border-radius:999px;padding:10px 13px;text-decoration:none;text-align:center;font-weight:700;
-  font-size:.93rem;cursor:pointer;border:0;font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif;min-width:92px
+.small-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:240px;margin:10px auto 0}
+.compact-controls{max-width:240px}
+.primary-pill,.secondary-pill,.ghost-pill,.digit-btn,.compact-pill{
+  height:48px;border-radius:14px;font-size:.95rem;font-weight:700;border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;box-sizing:border-box;
+  text-decoration:none;text-align:center;font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif
 }
 .primary-pill{background:var(--brand);color:#fff}
 .secondary-pill{background:#ffffff;color:var(--brand-dark);border:1px solid #b7c9ef}
@@ -86,9 +87,8 @@ body{min-height:100vh}
   .menu-btn{right:7px;top:4px;padding:3px 8px;font-size:.74rem}
   .brand-title{font-size:clamp(2rem,8vw,2.5rem)}
   .instruction-row{gap:6px}
-  .digit-pad{grid-template-columns:repeat(3,48px);max-width:154px}
-  .digit-btn{height:36px}
-  .compact-controls{max-width:260px}
+  .digit-pad{grid-template-columns:repeat(3,48px);max-width:160px}
+  .compact-controls{max-width:240px}
   .entry-panel{margin-top:3px;padding-top:3px;padding-bottom:4px}
   .status-bar{margin-bottom:3px}
 }
