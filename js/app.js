@@ -356,7 +356,12 @@
     menuModal.addEventListener("click", (e) => { if (e.target === menuModal) closeMenu(); });
   }
   if (menuRulesBtn && menuModal && rulesModal) {
-    menuRulesBtn.addEventListener("click", openRules);
+    menuRulesBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      menuModal.classList.add("hidden");
+      rulesModal.classList.remove("hidden");
+    });
   }
   if (menuShareBtn && menuModal) {
     menuShareBtn.addEventListener("click", async () => {
