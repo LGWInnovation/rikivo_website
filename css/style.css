@@ -80,13 +80,16 @@ body{min-height:100vh}
   .app-shell{padding-left:10px;padding-right:10px}
   .play-card,.section-card,.compact-card,.help-panel{border-radius:20px;padding-left:12px;padding-right:12px}
   .topbar{padding-top:7px;padding-bottom:5px}
+  .menu-btn{top:5px;right:7px;padding:3px 8px}
   .brand-title{font-size:clamp(2rem,8vw,2.5rem)}
   .instruction-row{gap:6px}
-  .tagline{font-size:.83rem}
-  .rules-btn{padding:5px 10px}
-  .digit-pad{grid-template-columns:repeat(3,52px);max-width:168px}
-  .digit-btn{height:42px}
-  .compact-controls{max-width:168px}
+  .tagline{font-size:.78rem;line-height:1.28}
+  .rules-btn{padding:4px 9px;font-size:.72rem}
+  .digit-pad{grid-template-columns:repeat(3,50px);max-width:160px}
+  .digit-btn{height:38px}
+  .compact-controls{max-width:160px}
+  .entry-panel{margin-top:4px;padding-top:4px;padding-bottom:5px}
+  .status-bar{margin-bottom:4px}
 }
 
 

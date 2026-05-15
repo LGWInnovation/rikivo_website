@@ -14,12 +14,21 @@
   const rulesBtn = document.getElementById("rules-btn");
   const rulesModal = document.getElementById("rules-modal");
   const rulesCloseBtn = document.getElementById("rules-close-btn");
+  const menuBtn = document.getElementById("menu-btn");
+  const menuModal = document.getElementById("menu-modal");
+  const menuCloseBtn = document.getElementById("menu-close-btn");
+  const menuRulesBtn = document.getElementById("menu-rules-btn");
+  const menuShareBtn = document.getElementById("menu-share-btn");
+  const menuPatreonLink = document.getElementById("menu-patreon-link");
+  const menuBookLink = document.getElementById("menu-book-link");
   const STATS_KEY = "rikivo_streak_stats_v1";
   const todayKey = getLondonDateKey();
   const startedAt = Date.now();
 
   if (patreonLinkInline) patreonLinkInline.href = config.patreonUrl || "#";
   if (bookLinkInline) bookLinkInline.href = config.bookUrl || "#";
+  if (menuPatreonLink) menuPatreonLink.href = config.patreonUrl || "#";
+  if (menuBookLink) menuBookLink.href = config.bookUrl || "#";
 
   const current = puzzle.givens.map(r => r.slice());
   let selected = null, cells = [], inputBuffer = "";
@@ -326,6 +335,23 @@
     rulesBtn.addEventListener("click", () => rulesModal.classList.remove("hidden"));
     rulesCloseBtn.addEventListener("click", () => rulesModal.classList.add("hidden"));
     rulesModal.addEventListener("click", (e) => { if (e.target === rulesModal) rulesModal.classList.add("hidden"); });
+  }
+  if (menuBtn && menuModal && menuCloseBtn) {
+    menuBtn.addEventListener("click", () => menuModal.classList.remove("hidden"));
+    menuCloseBtn.addEventListener("click", () => menuModal.classList.add("hidden"));
+    menuModal.addEventListener("click", (e) => { if (e.target === menuModal) menuModal.classList.add("hidden"); });
+  }
+  if (menuRulesBtn && menuModal && rulesModal) {
+    menuRulesBtn.addEventListener("click", () => {
+      menuModal.classList.add("hidden");
+      rulesModal.classList.remove("hidden");
+    });
+  }
+  if (menuShareBtn && menuModal) {
+    menuShareBtn.addEventListener("click", async () => {
+      menuModal.classList.add("hidden");
+      await shareResult();
+    });
   }
 
   createGrid(); createDigitPad(); renderStats();

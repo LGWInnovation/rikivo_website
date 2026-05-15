@@ -13,6 +13,7 @@
       <div class="brand-lockup">
         <div class="brand-title">RIKIVO</div>
       </div>
+      <button id="menu-btn" class="ghost-pill menu-btn" type="button" aria-label="Open menu">☰</button>
     </header>
 
     <section class="play-hero daily-hero">
@@ -42,12 +43,16 @@
       </div>
     </section>
 
-    <section class="section-card light-teal-tint compact-clue">
-      <h2>Clue key</h2>
-      <div class="legend-grid">
-        <div class="legend-card"><span class="key-box shade-1"></span><span>White = 1 square</span></div>
-        <div class="legend-card"><span class="key-box shade-2"></span><span>Light grey = 2 squares</span></div>
-        <div class="legend-card"><span class="key-box shade-3"></span><span>Dark grey = 3 squares</span></div>
+    <div id="menu-modal" class="rules-modal hidden" role="dialog" aria-modal="true" aria-labelledby="menu-title">
+      <div class="rules-card">
+        <h3 id="menu-title">Menu</h3>
+        <div class="menu-actions">
+          <button id="menu-rules-btn" class="secondary-pill rules-close-btn" type="button">Rules</button>
+          <a id="menu-patreon-link" class="secondary-pill rules-close-btn" href="#" target="_blank" rel="noopener noreferrer">Patreon</a>
+          <a id="menu-book-link" class="secondary-pill rules-close-btn" href="#" target="_blank" rel="noopener noreferrer">Amazon book</a>
+          <button id="menu-share-btn" class="secondary-pill rules-close-btn" type="button">Share Rikivo</button>
+          <button id="menu-close-btn" class="ghost-pill rules-close-btn" type="button">Close</button>
+        </div>
       </div>
     </section>
 
@@ -60,6 +65,7 @@
           <li>Moves are horizontal or vertical only.</li>
           <li>No diagonals.</li>
           <li>Grey shades show the distance to the next number.</li>
+          <li>White = 1 square, light grey = 2, dark grey = 3.</li>
           <li>The final number is shown in bold.</li>
         </ul>
         <button id="rules-close-btn" class="secondary-pill rules-close-btn" type="button">Close</button>
