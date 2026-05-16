@@ -379,7 +379,7 @@
   if (menuShareBtn && menuModal) {
     menuShareBtn.addEventListener("click", async () => {
       closeMenu();
-      await shareResult();
+      await shareBrand();
     });
   }
 
