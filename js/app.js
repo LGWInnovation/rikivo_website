@@ -363,7 +363,14 @@
   if (menuBtn && menuModal && menuCloseBtn) {
     menuBtn.addEventListener("click", openMenu);
     menuCloseBtn.addEventListener("click", closeMenu);
-    menuModal.addEventListener("click", (e) => { if (e.target === menuModal) closeMenu(); });
+    menuModal.addEventListener("click", (e) => {
+      if (e.target === menuModal) closeMenu();
+      if (e.target && e.target.id === "menu-rules-btn") {
+        e.preventDefault();
+        e.stopPropagation();
+        openRules();
+      }
+    });
   }
   if (menuRulesBtn && rulesModal) {
     menuRulesBtn.addEventListener("click", (event) => {
