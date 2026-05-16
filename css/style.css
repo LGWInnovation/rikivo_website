@@ -84,6 +84,7 @@ body{min-height:100vh}
 .rules-card ul{margin:0 0 10px 18px;padding:0;color:#334a72;font-size:.92rem;line-height:1.35}
 .rules-close-btn{width:100%}
 .menu-actions{display:grid;gap:7px}
+#menu-rules-btn,#rules-btn{cursor:pointer}
 .footer-line{display:block;width:120px;height:1px;background:var(--line);margin:0 auto 10px}
 @media (min-width:760px){.legend-grid{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:520px){
