@@ -373,10 +373,11 @@
     });
   }
   if (menuRulesBtn && rulesModal) {
-    menuRulesBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      openRules();
+    menuRulesBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (menuModal) menuModal.classList.add("hidden");
+      rulesModal.classList.remove("hidden");
     });
   }
   if (menuShareBtn && menuModal) {
