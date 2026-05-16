@@ -98,6 +98,33 @@ body{min-height:100vh}
   .compact-pill{font-size:.88rem}
   .entry-panel{margin-top:2px;padding:5px}
   .status-bar{margin-bottom:2px}
+  .keypad-panel{
+    display:grid;
+    grid-template-columns:repeat(5,var(--key-size));
+    grid-auto-rows:var(--key-size);
+    gap:var(--key-gap);
+    justify-content:center;
+  }
+  .digit-pad{display:contents}
+  .small-controls{display:contents}
+  #zero-btn{
+    grid-column:5;
+    grid-row:2;
+    width:var(--key-size);
+    height:var(--key-size);
+    min-width:var(--key-size);
+    max-width:var(--key-size);
+  }
+  #backspace-btn{
+    grid-column:2 / span 2;
+    grid-row:3;
+    width:calc(var(--key-size) * 2 + var(--key-gap));
+  }
+  #reset-btn{
+    grid-column:4 / span 2;
+    grid-row:3;
+    width:calc(var(--key-size) * 2 + var(--key-gap));
+  }
 }
 
 
