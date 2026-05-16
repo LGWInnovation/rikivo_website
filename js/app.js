@@ -19,7 +19,6 @@
   const menuModal = document.getElementById("menu-modal");
   const menuCloseBtn = document.getElementById("menu-close-btn");
   const menuRulesBtn = document.getElementById("menu-rules-btn") || rulesBtn;
-  const menuShareBtn = document.getElementById("menu-share-btn");
   const menuPatreonLink = document.getElementById("menu-patreon-link");
   const menuBookLink = document.getElementById("menu-book-link");
   const STATS_KEY = "rikivo_streak_stats_v1";
@@ -376,13 +375,6 @@
     menuCloseBtn.addEventListener("click", closeMenu);
     menuModal.addEventListener("click", (e) => { if (e.target === menuModal) closeMenu(); });
   }
-  if (menuShareBtn && menuModal) {
-    menuShareBtn.addEventListener("click", async () => {
-      closeMenu();
-      await shareBrand();
-    });
-  }
-
   createGrid(); createDigitPad(); renderStats();
   if (stats.solvedDates[todayKey]) {
     solved = true;
