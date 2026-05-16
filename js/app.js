@@ -18,7 +18,7 @@
   const menuBtn = document.getElementById("menu-btn");
   const menuModal = document.getElementById("menu-modal");
   const menuCloseBtn = document.getElementById("menu-close-btn");
-  const menuRulesBtn = document.getElementById("menu-rules-btn");
+  const menuRulesBtn = document.getElementById("menu-rules-btn") || rulesBtn;
   const menuShareBtn = document.getElementById("menu-share-btn");
   const menuPatreonLink = document.getElementById("menu-patreon-link");
   const menuBookLink = document.getElementById("menu-book-link");
@@ -137,6 +137,10 @@
   function openMenu() {
     closeRules();
     if (menuModal) menuModal.classList.remove("hidden");
+  }
+  function openRules() {
+    closeMenu();
+    if (rulesModal) rulesModal.classList.remove("hidden");
   }
   function showTemporaryFeedback(message) {
     showFeedback(message);
@@ -361,11 +365,11 @@
     menuCloseBtn.addEventListener("click", closeMenu);
     menuModal.addEventListener("click", (e) => { if (e.target === menuModal) closeMenu(); });
   }
-  if (menuRulesBtn && menuModal && rulesModal) {
-    menuRulesBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      menuModal.classList.add("hidden");
+  if (menuRulesBtn && rulesModal) {
+    menuRulesBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (menuModal) menuModal.classList.add("hidden");
       rulesModal.classList.remove("hidden");
     });
   }
