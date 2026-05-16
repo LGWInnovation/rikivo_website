@@ -31,6 +31,17 @@
   if (menuPatreonLink) menuPatreonLink.href = config.patreonUrl || "#";
   if (menuBookLink) menuBookLink.href = config.bookUrl || "#";
 
+  document.addEventListener("click", (event) => {
+    const rulesTrigger = event.target.closest("#menu-rules-btn, #rules-btn");
+    if (!rulesTrigger) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (menuModal) menuModal.classList.add("hidden");
+    if (rulesModal) rulesModal.classList.remove("hidden");
+  }, true);
+
   const current = puzzle.givens.map(r => r.slice());
   let selected = null, cells = [], inputBuffer = "";
   let replaceOnInput = false;
@@ -370,14 +381,6 @@
         e.stopPropagation();
         openRules();
       }
-    });
-  }
-  if (menuRulesBtn && rulesModal) {
-    menuRulesBtn.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (menuModal) menuModal.classList.add("hidden");
-      rulesModal.classList.remove("hidden");
     });
   }
   if (menuShareBtn && menuModal) {
