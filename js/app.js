@@ -18,7 +18,7 @@
   const menuBtn = document.getElementById("menu-btn");
   const menuModal = document.getElementById("menu-modal");
   const menuCloseBtn = document.getElementById("menu-close-btn");
-  const menuRulesBtn = document.getElementById("menu-rules-btn");
+  const menuRulesBtn = document.getElementById("menu-rules-btn") || rulesBtn;
   const menuShareBtn = document.getElementById("menu-share-btn");
   const menuPatreonLink = document.getElementById("menu-patreon-link");
   const menuBookLink = document.getElementById("menu-book-link");
@@ -30,6 +30,17 @@
   if (bookLinkInline) bookLinkInline.href = config.bookUrl || "#";
   if (menuPatreonLink) menuPatreonLink.href = config.patreonUrl || "#";
   if (menuBookLink) menuBookLink.href = config.bookUrl || "#";
+
+  document.addEventListener("click", (event) => {
+    const rulesTrigger = event.target.closest("#menu-rules-btn, #rules-btn");
+    if (!rulesTrigger) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (menuModal) menuModal.classList.add("hidden");
+    if (rulesModal) rulesModal.classList.remove("hidden");
+  }, true);
 
   const current = puzzle.givens.map(r => r.slice());
   let selected = null, cells = [], inputBuffer = "";
@@ -137,6 +148,10 @@
   function openMenu() {
     closeRules();
     if (menuModal) menuModal.classList.remove("hidden");
+  }
+  function openRules() {
+    closeMenu();
+    if (rulesModal) rulesModal.classList.remove("hidden");
   }
   function showTemporaryFeedback(message) {
     showFeedback(message);
@@ -360,14 +375,6 @@
     menuBtn.addEventListener("click", openMenu);
     menuCloseBtn.addEventListener("click", closeMenu);
     menuModal.addEventListener("click", (e) => { if (e.target === menuModal) closeMenu(); });
-  }
-  if (menuRulesBtn && menuModal && rulesModal) {
-    menuRulesBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      menuModal.classList.add("hidden");
-      rulesModal.classList.remove("hidden");
-    });
   }
   if (menuShareBtn && menuModal) {
     menuShareBtn.addEventListener("click", async () => {
