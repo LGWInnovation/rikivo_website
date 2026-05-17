@@ -66,17 +66,34 @@
   function loadStats() {
     try {
       const raw = localStorage.getItem(STATS_KEY);
-      if (!raw) return { currentStreak: 0, bestStreak: 0, lastCompletedDate: null, bestTimesByDate: {}, solvedDates: {} };
+      if (!raw) {
+        return {
+          currentStreak: 0,
+          bestStreak: 0,
+          lastCompletedDate: null,
+          bestTimesByDate: {},
+          solvedDates: {},
+          allTimeBestSeconds: null
+        };
+      }
       const parsed = JSON.parse(raw);
       return {
         currentStreak: Number.isInteger(parsed.currentStreak) ? parsed.currentStreak : 0,
         bestStreak: Number.isInteger(parsed.bestStreak) ? parsed.bestStreak : 0,
         lastCompletedDate: typeof parsed.lastCompletedDate === "string" ? parsed.lastCompletedDate : null,
         bestTimesByDate: parsed.bestTimesByDate && typeof parsed.bestTimesByDate === "object" ? parsed.bestTimesByDate : {},
-        solvedDates: parsed.solvedDates && typeof parsed.solvedDates === "object" ? parsed.solvedDates : {}
+        solvedDates: parsed.solvedDates && typeof parsed.solvedDates === "object" ? parsed.solvedDates : {},
+        allTimeBestSeconds: Number.isFinite(parsed.allTimeBestSeconds) ? parsed.allTimeBestSeconds : null
       };
     } catch (_) {
-      return { currentStreak: 0, bestStreak: 0, lastCompletedDate: null, bestTimesByDate: {}, solvedDates: {} };
+      return {
+        currentStreak: 0,
+        bestStreak: 0,
+        lastCompletedDate: null,
+        bestTimesByDate: {},
+        solvedDates: {},
+        allTimeBestSeconds: null
+      };
     }
   }
 
@@ -166,7 +183,7 @@
     if (!statsEl) return;
     statsEl.textContent = `Streak: ${stats.currentStreak}`;
     const bestEl = document.getElementById("best-stats");
-    if (bestEl) bestEl.textContent = `Best: ${stats.bestStreak}`;
+    if (bestEl) bestEl.textContent = `Best: ${Number.isFinite(stats.allTimeBestSeconds) ? formatDuration(stats.allTimeBestSeconds) : "—"}`;
     updateTimerDisplay();
   }
 
@@ -203,6 +220,10 @@
   }
 
   function updateBestTimeOnCompletion() {
+    const currentAllTimeBest = Number(stats.allTimeBestSeconds);
+    if (!Number.isFinite(currentAllTimeBest) || elapsedSeconds < currentAllTimeBest) {
+      stats.allTimeBestSeconds = elapsedSeconds;
+    }
     const existing = Number(stats.bestTimesByDate[todayKey]);
     if (!Number.isFinite(existing) || elapsedSeconds < existing) {
       stats.bestTimesByDate[todayKey] = elapsedSeconds;
