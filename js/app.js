@@ -146,17 +146,19 @@
   }
 
   function getShareText() {
-    return `I completed today’s Rikivo in ${formatDuration(elapsedSeconds)}.\n\nStreak: ${stats.currentStreak}\n\nCan you beat me?\nhttps://www.rikivo.com`;
+    const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
+    const timeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : formatDuration(elapsedSeconds);
+    return `Rikivo — ${todayKey}
+⏱ ${timeText}
+🔥 Streak: ${stats.currentStreak}
+https://www.rikivo.com`;
   }
 
   async function shareResult() {
     const text = getShareText();
     try {
       if (navigator.share) {
-        await navigator.share({
-          title: "Rikivo",
-          text
-        });
+        await navigator.share({ text });
         showTemporaryFeedback("Shared");
         return;
       }
