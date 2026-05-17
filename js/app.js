@@ -77,13 +77,25 @@
         };
       }
       const parsed = JSON.parse(raw);
+      const savedBestTimes = parsed.bestTimesByDate && typeof parsed.bestTimesByDate === "object"
+        ? parsed.bestTimesByDate
+        : {};
+      const storedAllTimeBest = Number(parsed.allTimeBestSeconds);
+      const migratedBestTimes = Object.values(savedBestTimes)
+        .map(Number)
+        .filter(Number.isFinite);
+      const migratedAllTimeBest = Number.isFinite(storedAllTimeBest)
+        ? storedAllTimeBest
+        : migratedBestTimes.length
+          ? Math.min(...migratedBestTimes)
+          : null;
       return {
         currentStreak: Number.isInteger(parsed.currentStreak) ? parsed.currentStreak : 0,
         bestStreak: Number.isInteger(parsed.bestStreak) ? parsed.bestStreak : 0,
         lastCompletedDate: typeof parsed.lastCompletedDate === "string" ? parsed.lastCompletedDate : null,
-        bestTimesByDate: parsed.bestTimesByDate && typeof parsed.bestTimesByDate === "object" ? parsed.bestTimesByDate : {},
+        bestTimesByDate: savedBestTimes,
         solvedDates: parsed.solvedDates && typeof parsed.solvedDates === "object" ? parsed.solvedDates : {},
-        allTimeBestSeconds: Number.isFinite(parsed.allTimeBestSeconds) ? parsed.allTimeBestSeconds : null
+        allTimeBestSeconds: migratedAllTimeBest
       };
     } catch (_) {
       return {
