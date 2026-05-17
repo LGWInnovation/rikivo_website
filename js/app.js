@@ -146,9 +146,7 @@
   }
 
   function getShareText() {
-    const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
-    const bestTimeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : "—";
-    return `Rikivo — ${todayKey}\n⏱ ${bestTimeText}\n🔥 Streak: ${stats.currentStreak}`;
+    return `I completed today’s Rikivo in ${formatDuration(elapsedSeconds)}.\n\nStreak: ${stats.currentStreak}\n\nCan you beat me?\nhttps://www.rikivo.com`;
   }
 
   async function shareResult() {
