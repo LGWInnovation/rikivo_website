@@ -153,7 +153,10 @@
     const text = getShareText();
     try {
       if (navigator.share) {
-        await navigator.share({ text });
+        await navigator.share({
+          title: "Rikivo",
+          text
+        });
         showTemporaryFeedback("Shared");
         return;
       }
