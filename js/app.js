@@ -23,7 +23,10 @@
   const menuBookLink = document.getElementById("menu-book-link");
   const STATS_KEY = "rikivo_streak_stats_v1";
   const todayKey = getLondonDateKey();
-  const startedAt = Date.now();
+
+  let timerStarted = false;
+  let timerInterval = null;
+  let elapsedSeconds = 0;
 
   if (patreonLinkInline) patreonLinkInline.href = config.patreonUrl || "#";
   if (bookLinkInline) bookLinkInline.href = config.bookUrl || "#";
@@ -161,13 +164,35 @@
 
   function renderStats() {
     if (!statsEl) return;
-    const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
-    const bestTimeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : "—";
     statsEl.textContent = `Streak: ${stats.currentStreak}`;
     const bestEl = document.getElementById("best-stats");
-    const timeEl = document.getElementById("time-stats");
     if (bestEl) bestEl.textContent = `Best: ${stats.bestStreak}`;
-    if (timeEl) timeEl.textContent = `Time: ${bestTimeText}`;
+    updateTimerDisplay();
+  }
+
+  function updateTimerDisplay() {
+    const timeEl = document.getElementById("time-stats");
+    if (!timeEl) return;
+    timeEl.textContent = `Time: ${formatDuration(elapsedSeconds)}`;
+  }
+
+  function startTimer() {
+    if (timerStarted || solved || stats.solvedDates[todayKey]) return;
+    timerStarted = true;
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+      elapsedSeconds += 1;
+      updateTimerDisplay();
+    }, 1000);
+  }
+
+  function stopTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+    timerStarted = false;
+    updateTimerDisplay();
   }
 
   function formatDuration(totalSeconds) {
@@ -178,9 +203,8 @@
   }
 
   function updateBestTimeOnCompletion() {
-    const elapsedSeconds = Math.floor((Date.now() - startedAt) / 1000);
     const existing = Number(stats.bestTimesByDate[todayKey]);
-    if (!Number.isFinite(existing)) {
+    if (!Number.isFinite(existing) || elapsedSeconds < existing) {
       stats.bestTimesByDate[todayKey] = elapsedSeconds;
       return true;
     }
@@ -223,6 +247,7 @@
     cell.style.fontWeight = value === puzzle.maxNumber ? "800" : "400";
     cells.forEach(c => c.classList.remove("correct","wrong"));
     restoreSelected(); showFeedback("");
+    startTimer();
     scheduleAutoCheckIfFilled();
   }
   function hasAnyEmptyCells() {
@@ -343,6 +368,7 @@
       if (!solved) {
         solved = true;
         stats.solvedDates[todayKey] = true;
+        stopTimer();
         updateStreakOnCompletion();
         updateBestTimeOnCompletion();
         saveStats();
@@ -376,6 +402,7 @@
     menuModal.addEventListener("click", (e) => { if (e.target === menuModal) closeMenu(); });
   }
   createGrid(); createDigitPad(); renderStats();
+  updateTimerDisplay();
   if (stats.solvedDates[todayKey]) {
     solved = true;
     if (shareBtn) shareBtn.style.display = "block";
