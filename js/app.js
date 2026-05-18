@@ -146,18 +146,23 @@
   }
 
   function getShareText() {
-    const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
-    const timeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : formatDuration(elapsedSeconds);
-    return `Rikivo — ${todayKey}
+  const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
+  const timeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : formatDuration(elapsedSeconds);
+  return `Rikivo — ${todayKey}
 ⏱ ${timeText}
 🔥 Streak: ${stats.currentStreak}
-
-Play at rikivo dot com`;
-  }
+https://www.rikivo.com`;
+}
 
   async function shareResult() {
     const text = getShareText();
     try {
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (isMobile) {
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        window.location.href = whatsappUrl;
+        return;
+      }
       if (navigator.share) {
         await navigator.share({ text });
         showTemporaryFeedback("Shared");
