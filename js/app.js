@@ -146,14 +146,13 @@
   }
 
   function getShareText() {
-    const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
-    const timeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : formatDuration(elapsedSeconds);
-    return `Rikivo — ${todayKey}
+  const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
+  const timeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : formatDuration(elapsedSeconds);
+  return `Rikivo — ${todayKey}
 ⏱ ${timeText}
 🔥 Streak: ${stats.currentStreak}
-
-Play at rikivo dot com`;
-  }
+https://www.rikivo.com`;
+}
 
   async function shareResult() {
     const text = getShareText();
