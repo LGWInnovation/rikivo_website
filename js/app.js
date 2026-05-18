@@ -157,6 +157,12 @@ https://www.rikivo.com`;
   async function shareResult() {
     const text = getShareText();
     try {
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (isMobile) {
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        window.location.href = whatsappUrl;
+        return;
+      }
       if (navigator.share) {
         await navigator.share({
           text,
