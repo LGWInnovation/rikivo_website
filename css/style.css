@@ -38,6 +38,17 @@ body{min-height:100vh}
   font-size:clamp(1.4rem,5vw,2rem);font-weight:400;color:var(--text);cursor:pointer;
   box-shadow:inset 0 -1px 0 rgba(255,255,255,.4)
 }
+.cell,
+.digit-btn,
+.primary-pill,
+.secondary-pill,
+.ghost-pill,
+.compact-pill,
+.menu-btn{
+  touch-action:manipulation;
+  -webkit-user-select:none;
+  user-select:none;
+}
 .cell.given-cell{box-shadow:inset 0 0 0 3px rgba(19,68,184,.28)}
 .cell.selected{outline:4px solid var(--selected);outline-offset:1px}
 .cell.correct{background:var(--correct)!important;box-shadow:inset 0 0 0 2px #d2dcf2}
@@ -66,6 +77,16 @@ body{min-height:100vh}
 .primary-pill{background:var(--brand);color:#fff}
 .secondary-pill{background:#ffffff;color:var(--brand-dark);border:1px solid #b7c9ef}
 .ghost-pill{background:#fff;color:var(--text);border:1px solid var(--line)}
+.digit-btn:disabled,
+.primary-pill:disabled,
+.secondary-pill:disabled,
+.ghost-pill:disabled,
+.compact-pill:disabled{
+  opacity:.45;
+  cursor:default;
+  pointer-events:none;
+}
+.share-result-btn{margin:4px auto 2px;min-width:140px}
 .habit-line{text-align:center;font-size:.84rem;margin:5px 0 0}
 .section-card,.compact-card{padding:12px 12px;margin-bottom:8px}
 .section-card h2,.compact-card h2{margin:0 0 7px;font-size:clamp(1.08rem,2.9vw,1.3rem);text-align:center;font-weight:700;color:#0f2239}
