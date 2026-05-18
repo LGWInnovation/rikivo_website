@@ -150,7 +150,8 @@
   const timeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : formatDuration(elapsedSeconds);
   return `Rikivo — ${todayKey}
 ⏱ ${timeText}
-🔥 Streak: ${stats.currentStreak}`;
+🔥 Streak: ${stats.currentStreak}
+https://www.rikivo.com`;
 }
 
   async function shareResult() {
