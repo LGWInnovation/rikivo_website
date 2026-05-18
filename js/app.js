@@ -151,9 +151,7 @@
     return `Rikivo — ${todayKey}
 ⏱ ${timeText}
 🔥 Streak: ${stats.currentStreak}
-
-Can you beat me?
-Play here: https://www.rikivo.com`;
+https://www.rikivo.com`;
   }
 
   async function shareResult() {
