@@ -146,25 +146,27 @@
   }
 
   function getShareText() {
-    const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
-    const timeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : formatDuration(elapsedSeconds);
-    return `Rikivo — ${todayKey}
+  const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
+  const timeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : formatDuration(elapsedSeconds);
+  return `Rikivo — ${todayKey}
 ⏱ ${timeText}
-🔥 Streak: ${stats.currentStreak}
-
-Play at rikivo dot com`;
-  }
+🔥 Streak: ${stats.currentStreak}`;
+}
 
   async function shareResult() {
     const text = getShareText();
     try {
       if (navigator.share) {
-        await navigator.share({ text });
+        await navigator.share({
+          text,
+          url: "https://www.rikivo.com"
+        });
         showTemporaryFeedback("Shared");
         return;
       }
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(text);
+        await navigator.clipboard.writeText(`${text}
+https://www.rikivo.com`);
         showTemporaryFeedback("Copied to clipboard");
         return;
       }
