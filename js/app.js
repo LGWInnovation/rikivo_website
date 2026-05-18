@@ -132,16 +132,16 @@
   function createShareButton() {
     const entryPanel = document.querySelector(".entry-panel");
     if (!entryPanel) return null;
+    const keypadPanel = entryPanel.querySelector(".keypad-panel");
     const btn = document.createElement("button");
     btn.type = "button";
     btn.id = "share-result-btn";
-    btn.className = "secondary-pill compact-pill";
+    btn.className = "secondary-pill compact-pill share-result-btn";
     btn.textContent = "Share Result";
     btn.style.display = "none";
-    btn.style.margin = "8px auto 0";
-    btn.style.minWidth = "140px";
     btn.addEventListener("click", shareResult);
-    entryPanel.appendChild(btn);
+    if (keypadPanel) entryPanel.insertBefore(btn, keypadPanel);
+    else entryPanel.appendChild(btn);
     return btn;
   }
 
@@ -303,15 +303,12 @@ Play here: https://www.rikivo.com`;
   }
   function setLockedUIState() {
     digitPadEl.querySelectorAll("button").forEach(btn => { btn.disabled = true; });
+    if (zeroBtn) zeroBtn.disabled = true;
     if (backspaceBtn) {
       backspaceBtn.disabled = true;
-      backspaceBtn.style.opacity = "0.6";
-      backspaceBtn.style.pointerEvents = "none";
     }
     if (resetBtn) {
       resetBtn.disabled = true;
-      resetBtn.style.opacity = "0.6";
-      resetBtn.style.pointerEvents = "none";
     }
   }
   function scheduleAutoCheckIfFilled() {
