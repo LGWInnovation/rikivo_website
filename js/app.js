@@ -146,34 +146,24 @@
   }
 
   function getShareText() {
-  const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
-  const timeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : formatDuration(elapsedSeconds);
-  return `Rikivo — ${todayKey}
+    const todayBestSeconds = Number(stats.bestTimesByDate[todayKey]);
+    const timeText = Number.isFinite(todayBestSeconds) ? formatDuration(todayBestSeconds) : formatDuration(elapsedSeconds);
+    return `Rikivo — ${todayKey}
 ⏱ ${timeText}
 🔥 Streak: ${stats.currentStreak}
 https://www.rikivo.com`;
-}
+  }
 
   async function shareResult() {
     const text = getShareText();
     try {
-      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      if (isMobile) {
-        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-        window.location.href = whatsappUrl;
-        return;
-      }
       if (navigator.share) {
-        await navigator.share({
-          text,
-          url: "https://www.rikivo.com"
-        });
+        await navigator.share({ text });
         showTemporaryFeedback("Shared");
         return;
       }
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(`${text}
-https://www.rikivo.com`);
+        await navigator.clipboard.writeText(text);
         showTemporaryFeedback("Copied to clipboard");
         return;
       }
